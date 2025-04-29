@@ -1,0 +1,7 @@
+spring.application.name=CHANGE-ME
+spring.datasource.url=jdbc:postgresql://psql:5432/CHANGE-ME
+spring.datasource.username=CHANGE-ME
+spring.datasource.password=CHANGE-ME
+spring.jpa.show-sql=true
+spring.jpa.hibernate.ddl-auto=create-drop
+server.port=8080

@@ -1,0 +1,36 @@
+services:
+  springboot-app:
+    container_name: springboot-app
+    build:
+      context: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - psql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://psql:5432/CHANGE-ME
+      SPRING_DATASOURCE_USERNAME: CHANGE-ME
+      SPRING_DATASOURCE_PASSWORD: CHANGE-ME
+    volumes:
+      - .:/app
+    networks:
+      - springboot-network
+
+  psql:
+    container_name: psql
+    image: postgres:17
+    environment:
+      POSTGRES_USER: CHANGE-ME
+      POSTGRES_PASSWORD: CHANGE-ME
+      POSTGRES_DB: CHANGE-ME
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - springboot-network
+
+volumes:
+  postgres-data:
+
+networks:
+  springboot-network:
+    driver: bridge
