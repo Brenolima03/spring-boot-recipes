@@ -1,0 +1,22 @@
+# Maven stuff
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+# Git
+.git
+.gitignore
+
+# IDEs and editors
+*.iml
+.idea/
+*.log
+*.swp
+*.bak
+*.tmp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Env files
+*.env

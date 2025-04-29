@@ -24,3 +24,5 @@ If you manually switch to a different parent and actually want the inheritance, 
 
 ./mvnw clean install
 ./mvnw spring-boot:run
+docker build --platform linux/amd64 -t spring-boot-recipes .
+docker run -p 8080:8080 -t spring-boot-recipes:latest
