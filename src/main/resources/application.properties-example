@@ -5,3 +5,4 @@ spring.datasource.password=CHANGE-ME
 spring.jpa.show-sql=true
 spring.jpa.hibernate.ddl-auto=create-drop
 server.port=8080
+app.cors.allowed-origins=CHANGE-ME
