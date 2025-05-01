@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.br.recipes.entities.dto.MealRequestDTO;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,6 +21,7 @@ public class Meal {
   @GeneratedValue(strategy=GenerationType.UUID)
   private UUID id;
   private String name;
+  @Column(columnDefinition = "TEXT")
   private String image;
   private Float price;
 
