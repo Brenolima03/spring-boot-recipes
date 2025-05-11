@@ -50,6 +50,6 @@ curl -X POST http://localhost:8080/meals \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Meal name",
-    "image": "",
-    "price": 0.0
+    "description": "",
+    "image": ""
   }'

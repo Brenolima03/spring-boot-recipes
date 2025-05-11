@@ -4,8 +4,10 @@ import java.util.UUID;
 
 import com.br.recipes.entities.Meal;
 
-public record MealResponseDTO(UUID id, String name, String image, Float price) {
+public record MealResponseDTO(
+  UUID id, String name, String description, String image
+) {
   public MealResponseDTO(Meal meal) {
-    this(meal.getId(), meal.getName(), meal.getImage(), meal.getPrice());
+    this(meal.getId(), meal.getName(), meal.getDescription(), meal.getImage());
   }
 }

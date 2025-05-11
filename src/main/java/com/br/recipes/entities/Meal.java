@@ -10,31 +10,27 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name="meals")
-@Getter @Setter
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class Meal {
   @Id
   @GeneratedValue(strategy=GenerationType.UUID)
   private UUID id;
   private String name;
   @Column(columnDefinition = "TEXT")
+  private String description;
+  @Column(columnDefinition = "TEXT")
   private String image;
-  private Float price;
 
-  public Meal() {}
-  public Meal(UUID id, String name, String image, Float price) {
-    this.id = id;
-    this.name = name;
-    this.image = image;
-    this.price = price;
-  }
   public Meal(MealRequestDTO mealData) {
     this.name = mealData.name();
+    this.description = mealData.description();
     this.image = mealData.image();
-    this.price = mealData.price();
   }
 }

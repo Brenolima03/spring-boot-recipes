@@ -61,7 +61,7 @@ public class SecurityFilter extends OncePerRequestFilter {
           );
           SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-      } catch (Exception e) {
+      } catch (IOException e) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().write("Token validation error.");
         return;
