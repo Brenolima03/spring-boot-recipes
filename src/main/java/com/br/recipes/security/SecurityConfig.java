@@ -43,6 +43,14 @@ public class SecurityConfig {
       session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
     )
     .authorizeHttpRequests(auth -> auth
+      .requestMatchers(
+        "/swagger-ui.html",
+        "/swagger-ui/index.html",
+        "/swagger-ui/**",
+        "/v3/api-docs/**",
+        "/v3/api-docs.yaml",
+        "/api-docs/**"
+      ).permitAll()
       .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
       .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
       .requestMatchers(HttpMethod.GET, "/auth/register").permitAll()
@@ -58,7 +66,9 @@ public class SecurityConfig {
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration config = new CorsConfiguration();
     config.setAllowedOrigins(List.of(allowedOrigin));
-    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+    config.setAllowedMethods(
+      List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")
+    );
     config.setAllowedHeaders(List.of("*"));
     config.setAllowCredentials(true);
 
