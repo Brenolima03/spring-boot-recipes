@@ -7,9 +7,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,32 +20,38 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.br.recipes.entities.Meal;
 import com.br.recipes.entities.dto.MealRequestDTO;
-import com.br.recipes.entities.dto.MealResponseDTO;
 import com.br.recipes.exceptions.MealNotFoundException;
 import com.br.recipes.repositories.MealRepository;
 
 @RestController
 @RequestMapping("/meals")
-public class MealController {
-  @Autowired
-  private MealRepository mealRepository;
+class MealController {
+  private final MealRepository mealRepository;
+  private final MealModelAssembler assembler;
+
+  MealController(MealRepository mealRepository, MealModelAssembler assembler) {
+    this.mealRepository = mealRepository;
+    this.assembler = assembler;
+  }
 
   @PostMapping
-  public void post(@RequestBody MealRequestDTO mealData) {
-    Meal meal = new Meal(mealData);
-    mealRepository.save(meal);
+  ResponseEntity<?> post(@RequestBody MealRequestDTO mealData) {
+    Meal meal = new Meal();
+    meal.setName(mealData.name());
+    meal.setDescription(mealData.description());
+    meal.setImage(mealData.image());
+
+    EntityModel<Meal> model = assembler.toModel(mealRepository.save(meal));
+
+    return ResponseEntity
+      .created(model.getRequiredLink(IanaLinkRelations.SELF).toUri())
+      .body(model);
   }
 
   @GetMapping()
-  public CollectionModel<EntityModel<MealResponseDTO>> findAll() {
-    List<EntityModel<MealResponseDTO>> meals = mealRepository.findAll().stream()
-      .map(meal -> {
-        MealResponseDTO dto = new MealResponseDTO(meal);
-        return EntityModel.of(dto,
-          linkTo(methodOn(MealController.class)
-            .findOne(meal.getId())).withSelfRel(),
-          linkTo(methodOn(MealController.class).findAll()).withRel("meals"));
-      })
+  CollectionModel<EntityModel<Meal>> findAll() {
+    List<EntityModel<Meal>> meals = mealRepository.findAll().stream()
+      .map(assembler::toModel)
       .collect(Collectors.toList());
 
     return CollectionModel.of(
@@ -53,14 +60,11 @@ public class MealController {
   }
 
   @GetMapping("/{id}")
-  public EntityModel<MealResponseDTO> findOne(@PathVariable UUID id) {
-    Meal meal = mealRepository.findById(id)
-      .orElseThrow(() -> new MealNotFoundException(id));
+  EntityModel<Meal> findById(@PathVariable UUID id) {
+    Meal meal = mealRepository.findById(id).orElseThrow(() ->
+      new MealNotFoundException(id)
+    );
 
-    MealResponseDTO dto = new MealResponseDTO(meal);
-
-    return EntityModel.of(dto,
-      linkTo(methodOn(MealController.class).findOne(id)).withSelfRel(),
-      linkTo(methodOn(MealController.class).findAll()).withRel("meals"));
+    return assembler.toModel(meal);
   }
 }
